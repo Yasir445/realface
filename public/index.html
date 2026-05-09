@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REALFACE — Only Real Humans Here</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#050508;--white:#f8f6f2;--cream:#f0ede6;
+  --green:#00e87a;--green-dark:#00b85f;--green-glow:rgba(0,232,122,0.15);
+  --red:#ff3b3b;--blue:#4d9fff;
+  --text:#1a1a2e;--mid:#6b6b80;--soft:#7a7a90;
+  --border:rgba(255,255,255,0.07);--card:rgba(255,255,255,0.03);
+  --pill:100px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;cursor:none;}
+
+/* CURSOR */
+#cur{width:8px;height:8px;background:var(--green);border-radius:50%;position:fixed;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);mix-blend-mode:screen;transition:width .2s,height .2s;}
+#curR{width:36px;height:36px;border:1px solid rgba(0,232,122,0.35);border-radius:50%;position:fixed;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:width .3s,height .3s;}
+body.hs #cur{width:14px;height:14px;}
+body.hs #curR{width:56px;height:56px;border-color:var(--green);}
+
+/* PAGES */
+.page{display:none;min-height:100vh;}
+.page.active{display:block;animation:fIn .35s ease;}
+@keyframes fIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:900;height:66px;padding:0 52px;display:flex;align-items:center;justify-content:space-between;background:rgba(5,5,8,0.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--white);display:flex;align-items:center;gap:10px;cursor:none;letter-spacing:-0.3px;}
+.logo-dot{width:9px;height:9px;background:var(--green);border-radius:50%;box-shadow:0 0 10px var(--green);animation:gPulse 2s ease-in-out infinite;}
+@keyframes gPulse{0%,100%{box-shadow:0 0 10px var(--green);}50%{box-shadow:0 0 20px var(--green),0 0 40px rgba(0,232,122,0.3);}}
+.nav-links{display:flex;gap:32px;list-style:none;}
+.nav-links a{font-size:14px;font-weight:500;color:var(--soft);text-decoration:none;cursor:none;transition:color .2s;}
+.nav-links a:hover{color:var(--white);}
+.nav-r{display:flex;gap:10px;align-items:center;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;border-radius:var(--pill);font-size:14px;font-weight:700;border:1.5px solid transparent;cursor:none;font-family:'DM Sans',sans-serif;transition:all .2s;text-decoration:none;}
+.btn-ghost{border-color:var(--border);color:var(--soft);background:transparent;}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.2);color:var(--white);}
+.btn-green{background:var(--green);color:var(--black);border-color:var(--green);}
+.btn-green:hover{background:#00ff88;transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,232,122,0.3);}
+.btn-white{background:var(--white);color:var(--black);border-color:var(--white);}
+.btn-white:hover{transform:translateY(-2px);}
+.btn-outline-green{border-color:rgba(0,232,122,0.4);color:var(--green);background:transparent;}
+.btn-outline-green:hover{background:var(--green-glow);border-color:var(--green);}
+.btn-lg{padding:15px 38px;font-size:16px;}
+.btn-sm{padding:8px 18px;font-size:12px;}
+.btn-red{background:var(--red);color:#fff;border-color:var(--red);}
+.w-full{width:100%;justify-content:center;}
+
+/* HERO */
+.hero{min-height:100vh;padding:130px 52px 80px;position:relative;overflow:hidden;}
+.hero-glow{position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(ellipse,rgba(0,232,122,0.07) 0%,transparent 70%);pointer-events:none;}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1200px;margin:0 auto;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(0,232,122,0.07);border:1px solid rgba(0,232,122,0.18);padding:6px 14px;border-radius:var(--pill);font-size:11px;font-weight:700;color:var(--green);letter-spacing:.1em;text-transform:uppercase;margin-bottom:26px;}
+.hero-eyebrow-dot{width:5px;height:5px;background:var(--green);border-radius:50%;animation:gPulse 1.5s infinite;}
+h1{font-family:'Syne',sans-serif;font-size:clamp(46px,5.5vw,78px);font-weight:800;line-height:1.02;letter-spacing:-2px;margin-bottom:22px;}
+h1 em{font-style:italic;font-family:'DM Serif Display',serif;color:var(--green);font-weight:400;letter-spacing:-1px;}
+.hero-desc{font-size:17px;line-height:1.8;color:var(--soft);max-width:460px;margin-bottom:36px;}
+.hero-desc strong{color:var(--white);font-weight:600;}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px;}
+.hero-stats{display:flex;gap:36px;flex-wrap:wrap;}
+.hs-n{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;display:block;letter-spacing:-1px;}
+.hs-l{font-size:11px;color:var(--soft);font-weight:500;letter-spacing:.05em;text-transform:uppercase;margin-top:2px;}
+
+/* VERIFICATION CARD */
+.hero-visual{position:relative;}
+.vc{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:24px;padding:28px;position:relative;overflow:hidden;}
+.vc::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,232,122,0.04) 0%,transparent 60%);pointer-events:none;}
+.vc-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+.vc-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;letter-spacing:-.2px;}
+.vc-live{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--green);}
+.vc-live-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:gPulse 1s infinite;}
+.challenge-box{background:rgba(0,232,122,0.05);border:1px solid rgba(0,232,122,0.12);border-radius:16px;padding:22px;margin-bottom:18px;text-align:center;}
+.ch-big-emoji{font-size:56px;display:block;margin-bottom:12px;animation:floatEmoji 3s ease-in-out infinite;}
+@keyframes floatEmoji{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+.ch-instruction{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--white);margin-bottom:5px;letter-spacing:-.2px;}
+.ch-sub{font-size:12px;color:var(--soft);}
+.timer-wrap{margin-bottom:18px;}
+.timer-bar{height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;}
+.timer-fill{height:100%;background:linear-gradient(90deg,var(--green),#00ff88);border-radius:2px;animation:timerAnim 6s linear infinite;}
+@keyframes timerAnim{0%{width:100%;}100%{width:0%;}}
+.timer-label{display:flex;justify-content:space-between;font-size:11px;color:var(--soft);margin-top:6px;}
+.users-row{display:flex;align-items:center;gap:10px;}
+.avatars{display:flex;}
+.av{width:30px;height:30px;border-radius:50%;border:2px solid var(--black);background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:14px;margin-left:-7px;}
+.av:first-child{margin-left:0;}
+.users-text{font-size:12px;color:var(--soft);}
+.users-text span{color:var(--green);font-weight:700;}
+.float-badges{position:absolute;}
+.fbadge{position:absolute;background:rgba(5,5,8,0.92);border:1px solid var(--border);border-radius:10px;padding:9px 13px;backdrop-filter:blur(10px);display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;white-space:nowrap;}
+.fbadge.fb1{top:-24px;right:-16px;animation:floatB 4s ease-in-out infinite;}
+.fbadge.fb2{bottom:-24px;left:-16px;animation:floatB 4s ease-in-out infinite 2s;}
+@keyframes floatB{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+.fb-dot{width:7px;height:7px;border-radius:50%;}
+
+/* SECTIONS */
+.sec{padding:96px 52px;}
+.sec-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.sec-label::before{content:'';width:20px;height:1px;background:var(--green);}
+h2{font-family:'Syne',sans-serif;font-size:clamp(30px,4vw,52px);font-weight:800;line-height:1.08;letter-spacing:-1.5px;margin-bottom:18px;}
+.s-desc{font-size:16px;color:var(--soft);line-height:1.78;max-width:520px;}
+
+/* PROBLEM */
+.prob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-top:60px;border:1px solid var(--border);border-radius:20px;overflow:hidden;}
+.prob-card{background:var(--black);padding:34px 30px;transition:background .3s;}
+.prob-card:hover{background:rgba(255,255,255,0.02);}
+.prob-stat{font-family:'Syne',sans-serif;font-size:48px;font-weight:800;letter-spacing:-2px;margin-bottom:8px;}
+.prob-stat.red{color:var(--red);}
+.prob-stat.amber{color:#ffb800;}
+.prob-stat.green{color:var(--green);}
+.prob-lbl{font-size:15px;font-weight:600;color:var(--white);margin-bottom:7px;}
+.prob-desc{font-size:13px;color:var(--soft);line-height:1.65;}
+
+/* HOW */
+.how-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-top:60px;}
+.steps{display:flex;flex-direction:column;}
+.step{display:flex;gap:20px;padding:26px 0;border-bottom:1px solid var(--border);cursor:none;transition:all .25s;}
+.step:last-child{border-bottom:none;}
+.step:hover .step-title{color:var(--green);}
+.step-n{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--green);letter-spacing:.1em;flex-shrink:0;padding-top:3px;width:28px;}
+.step-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;letter-spacing:-.4px;margin-bottom:7px;transition:color .25s;}
+.step-desc{font-size:13px;color:var(--soft);line-height:1.7;}
+.chal-demo{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:22px;padding:28px;}
+.cd-label{font-size:11px;font-weight:700;color:var(--soft);text-transform:uppercase;letter-spacing:.1em;margin-bottom:20px;}
+.chal-cards{display:flex;flex-direction:column;gap:10px;}
+.chl-card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:13px;padding:14px 16px;display:flex;align-items:center;gap:12px;transition:all .25s;}
+.chl-card:hover,.chl-card.active{border-color:rgba(0,232,122,0.25);background:rgba(0,232,122,0.04);}
+.chl-ico{font-size:22px;flex-shrink:0;}
+.chl-inf{flex:1;}
+.chl-name{font-size:13px;font-weight:600;margin-bottom:2px;}
+.chl-desc{font-size:11px;color:var(--soft);}
+.chl-st{font-size:11px;font-weight:700;padding:3px 9px;border-radius:var(--pill);}
+.st-pass{background:rgba(0,232,122,0.1);color:var(--green);}
+.st-fail{background:rgba(255,59,59,0.1);color:var(--red);}
+.st-live{background:rgba(255,184,0,0.1);color:#ffb800;animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+/* FEATURES */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:60px;}
+.feat-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:30px 26px;transition:all .3s;cursor:none;position:relative;overflow:hidden;}
+.feat-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,232,122,0.04),transparent 60%);opacity:0;transition:opacity .3s;}
+.feat-card:hover{border-color:rgba(0,232,122,0.18);transform:translateY(-4px);}
+.feat-card:hover::after{opacity:1;}
+.feat-ico{width:50px;height:50px;border-radius:13px;background:rgba(0,232,122,0.07);border:1px solid rgba(0,232,122,0.12);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:18px;}
+.feat-card h3{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;letter-spacing:-.3px;margin-bottom:9px;}
+.feat-card p{font-size:13px;color:var(--soft);line-height:1.7;}
+.feat-tag{display:inline-block;margin-top:14px;font-size:10px;font-weight:700;color:var(--green);letter-spacing:.07em;text-transform:uppercase;}
+
+/* EARN */
+.earn-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.earn-streams{display:flex;flex-direction:column;gap:12px;margin-top:36px;}
+.earn-item{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px 18px;transition:all .25s;}
+.earn-item:hover{border-color:rgba(0,232,122,0.18);background:rgba(0,232,122,0.02);}
+.ei-ico{width:38px;height:38px;border-radius:10px;background:rgba(0,232,122,0.07);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.ei-inf{flex:1;}
+.ei-name{font-size:13px;font-weight:700;margin-bottom:2px;}
+.ei-desc{font-size:11px;color:var(--soft);}
+.ei-amt{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--green);letter-spacing:-.3px;}
+.rev-card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:32px;position:relative;overflow:hidden;}
+.rev-card::before{content:'';position:absolute;top:-100px;right:-100px;width:280px;height:280px;background:radial-gradient(circle,rgba(0,232,122,0.06) 0%,transparent 70%);}
+.rev-lbl{font-size:11px;font-weight:700;color:var(--soft);text-transform:uppercase;letter-spacing:.1em;margin-bottom:22px;}
+.rev-rows{display:flex;flex-direction:column;}
+.rev-row{padding:14px 0;border-bottom:1px solid var(--border);}
+.rev-row:last-child{border-bottom:none;}
+.rev-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.rev-yr{font-size:13px;color:var(--soft);font-weight:500;}
+.rev-amt{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--white);letter-spacing:-.5px;}
+.rev-bar{height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;}
+.rev-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--green),#00ff88);}
+
+/* TESTIMONIALS */
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:60px;}
+.test-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:26px;transition:all .3s;}
+.test-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,0.1);}
+.test-stars{color:var(--green);font-size:13px;margin-bottom:14px;letter-spacing:2px;}
+.test-text{font-size:14px;color:var(--soft);line-height:1.75;margin-bottom:18px;font-style:italic;}
+.test-text strong{color:var(--white);font-style:normal;}
+.test-author{display:flex;align-items:center;gap:11px;}
+.test-av{width:38px;height:38px;border-radius:50%;background:rgba(0,232,122,0.08);border:1px solid rgba(0,232,122,0.15);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.test-name{font-size:13px;font-weight:700;}
+.test-role{font-size:11px;color:var(--soft);}
+.test-badge{margin-left:auto;font-size:10px;font-weight:700;color:var(--green);display:flex;align-items:center;gap:4px;}
+
+/* PRICING */
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:60px;}
+.price-card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:34px 30px;transition:all .3s;position:relative;}
+.price-card.feat{background:var(--green);border-color:var(--green);}
+.price-card:not(.feat):hover{border-color:rgba(0,232,122,0.2);transform:translateY(-4px);}
+.feat-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--black);color:var(--green);font-size:10px;font-weight:700;padding:3px 14px;border-radius:var(--pill);border:1px solid var(--green);white-space:nowrap;letter-spacing:.07em;text-transform:uppercase;}
+.price-plan{font-size:11px;font-weight:700;color:var(--soft);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;}
+.price-card.feat .price-plan{color:rgba(5,5,8,.6);}
+.price-amt{font-family:'Syne',sans-serif;font-size:48px;font-weight:800;letter-spacing:-2px;margin-bottom:3px;}
+.price-card.feat .price-amt{color:var(--black);}
+.price-period{font-size:13px;color:var(--soft);margin-bottom:26px;}
+.price-card.feat .price-period{color:rgba(5,5,8,.5);}
+.price-feats{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:28px;}
+.price-feats li{font-size:13px;color:var(--soft);display:flex;align-items:center;gap:8px;}
+.price-card.feat .price-feats li{color:rgba(5,5,8,.7);}
+.price-feats li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;}
+.price-card.feat .price-feats li::before{color:var(--black);}
+
+/* CTA */
+.cta-sec{padding:120px 52px;text-align:center;position:relative;overflow:hidden;}
+.cta-bg{position:absolute;inset:0;background:radial-gradient(ellipse 700px 500px at 50% 50%,rgba(0,232,122,0.07) 0%,transparent 70%);pointer-events:none;}
+.cta-sec h2{max-width:660px;margin:0 auto 20px;}
+.cta-desc{font-size:17px;color:var(--soft);max-width:480px;margin:0 auto 40px;line-height:1.75;}
+.cta-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
+
+/* MODALS */
+.mo{position:fixed;inset:0;background:rgba(5,5,8,.85);z-index:9000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(12px);padding:20px;}
+.mo.open{display:flex;animation:fIn .3s ease;}
+.modal{background:#0d0d14;border:1px solid var(--border);border-radius:26px;width:500px;max-width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 32px 100px rgba(0,0,0,.6);}
+.modal-sm{width:440px;}
+.mhd{padding:28px 32px 0;display:flex;align-items:flex-start;justify-content:space-between;}
+.mbd{padding:22px 32px 32px;}
+.mclose{background:none;border:none;font-size:20px;color:var(--soft);cursor:none;padding:4px;transition:color .2s;}
+.mclose:hover{color:var(--white);}
+
+/* AUTH */
+.auth-top{background:linear-gradient(135deg,rgba(0,232,122,0.07),rgba(77,159,255,0.04));border-radius:26px 26px 0 0;padding:32px;text-align:center;border-bottom:1px solid var(--border);}
+.auth-top h3{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;letter-spacing:-.5px;margin-bottom:5px;}
+.auth-top p{font-size:13px;color:var(--soft);}
+.auth-body{padding:26px 30px 30px;}
+.soc-btns{display:flex;flex-direction:column;gap:9px;margin-bottom:20px;}
+.soc-btn{display:flex;align-items:center;justify-content:center;gap:9px;padding:12px;border-radius:11px;border:1px solid var(--border);font-size:13px;font-weight:600;color:var(--white);background:rgba(255,255,255,0.03);cursor:none;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.soc-btn:hover{border-color:rgba(255,255,255,0.14);background:rgba(255,255,255,0.05);}
+.divider{display:flex;align-items:center;gap:10px;margin-bottom:18px;font-size:11px;color:var(--soft);}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.fg{margin-bottom:15px;}
+.fl{font-size:12px;font-weight:600;color:var(--soft);margin-bottom:5px;display:block;letter-spacing:.02em;}
+.fi,.fs{width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:11px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--white);background:rgba(255,255,255,0.03);outline:none;transition:border-color .2s;}
+.fi:focus,.fs:focus{border-color:var(--green);}
+.fi::placeholder{color:rgba(122,122,144,0.5);}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.auth-switch{text-align:center;margin-top:14px;font-size:13px;color:var(--soft);}
+.auth-switch a{color:var(--green);font-weight:600;text-decoration:none;cursor:none;}
+
+/* VERIFY MODAL */
+.verify-box{background:rgba(0,232,122,0.04);border:1px solid rgba(0,232,122,0.12);border-radius:18px;padding:26px;text-align:center;margin-bottom:18px;}
+.v-emoji{font-size:72px;display:block;margin-bottom:14px;animation:floatEmoji 2s ease-in-out infinite;}
+.v-inst{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;letter-spacing:-.4px;margin-bottom:6px;}
+.v-sub{font-size:13px;color:var(--soft);}
+.v-timer{height:5px;background:rgba(255,255,255,0.07);border-radius:3px;margin:18px 0 6px;overflow:hidden;}
+.v-fill{height:100%;background:linear-gradient(90deg,var(--green),#00ff88);border-radius:3px;width:100%;transition:width .1s linear;}
+.v-time-row{display:flex;justify-content:space-between;font-size:11px;color:var(--soft);}
+.success-screen{text-align:center;padding:10px 0;}
+.s-ico{font-size:64px;margin-bottom:16px;display:block;animation:bounceIn .5s ease;}
+@keyframes bounceIn{0%{transform:scale(0.5);opacity:0;}60%{transform:scale(1.15);}100%{transform:scale(1);opacity:1;}}
+.success-screen h3{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px;}
+.success-screen p{font-size:14px;color:var(--soft);line-height:1.7;max-width:320px;margin:0 auto 22px;}
+
+/* DASHBOARD */
+#page-dashboard{background:#060608;}
+.dash-layout{display:grid;grid-template-columns:252px 1fr;min-height:calc(100vh - 66px);margin-top:66px;}
+.dash-side{background:#08080d;border-right:1px solid var(--border);padding:22px 0;position:sticky;top:66px;height:calc(100vh - 66px);overflow-y:auto;}
+.dn-sec{padding:14px 22px 5px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);}
+.dn-item{display:flex;align-items:center;gap:11px;padding:10px 22px;font-size:13px;font-weight:500;color:var(--soft);cursor:none;transition:all .2s;border-left:2px solid transparent;margin-bottom:1px;}
+.dn-item:hover,.dn-item.active{color:var(--white);background:rgba(255,255,255,0.03);border-left-color:var(--green);}
+.dn-item.active{font-weight:700;}
+.dash-main{padding:32px 38px;overflow-y:auto;}
+.dash-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:14px;}
+.dash-top h2{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;letter-spacing:-.6px;margin-bottom:3px;}
+.dash-top p{color:var(--soft);font-size:14px;}
+.verified-pill{display:flex;align-items:center;gap:8px;background:rgba(0,232,122,0.08);border:1px solid rgba(0,232,122,0.18);border-radius:var(--pill);padding:10px 16px;}
+.vp-dot{width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 8px var(--green);}
+.vp-label{font-size:12px;font-weight:700;color:var(--green);}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+.kpi{background:#0d0d14;border:1px solid var(--border);border-radius:14px;padding:20px 18px;}
+.kpi-l{font-size:10px;color:var(--soft);font-weight:600;margin-bottom:7px;text-transform:uppercase;letter-spacing:.06em;}
+.kpi-v{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:3px;}
+.kpi-c{font-size:11px;font-weight:600;color:var(--green);}
+.dgrid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.dgrid3{display:grid;grid-template-columns:2fr 1fr;gap:16px;}
+.dp{background:#0d0d14;border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.dp-hd{padding:15px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.dp-t{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;letter-spacing:-.2px;}
+.dp-b{padding:16px 20px;}
+.act-item{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--border);}
+.act-item:last-child{border-bottom:none;}
+.act-ico{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.act-inf{flex:1;}
+.act-t{font-size:12px;font-weight:600;margin-bottom:2px;}
+.act-s{font-size:11px;color:var(--soft);}
+.act-a{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--green);}
+.feed-item{padding:13px 0;border-bottom:1px solid var(--border);display:flex;gap:11px;}
+.feed-item:last-child{border-bottom:none;}
+.feed-av{width:36px;height:36px;border-radius:50%;background:rgba(0,232,122,0.07);border:1px solid rgba(0,232,122,0.12);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.feed-inf{flex:1;}
+.feed-name{font-size:13px;font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:5px;}
+.vtick{width:13px;height:13px;background:var(--green);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:8px;color:var(--black);font-weight:900;}
+.feed-txt{font-size:12px;color:var(--soft);line-height:1.5;}
+.feed-time{font-size:10px;color:var(--soft);margin-top:3px;}
+.mini-chart{display:flex;align-items:flex-end;gap:5px;height:72px;}
+.mb{flex:1;border-radius:3px 3px 0 0;background:rgba(255,255,255,0.06);transition:height .5s ease;}
+.mb.hi{background:var(--green);}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;right:22px;background:#0d0d14;border:1px solid var(--border);color:var(--white);padding:12px 18px;border-radius:12px;font-size:13px;font-weight:500;z-index:99999;transform:translateY(80px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:9px;max-width:300px;box-shadow:0 16px 60px rgba(0,0,0,.5);}
+.toast.show{transform:none;opacity:1;}
+
+/* FOOTER */
+.footer{background:#060608;border-top:1px solid var(--border);padding:56px 52px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:44px;}
+.footer-brand p{font-size:13px;color:var(--soft);line-height:1.7;max-width:230px;margin-top:11px;}
+.fc-t{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--white);margin-bottom:13px;letter-spacing:-.1px;}
+.fc-l{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.fc-l a{font-size:13px;color:var(--soft);text-decoration:none;cursor:none;transition:color .2s;}
+.fc-l a:hover{color:var(--green);}
+.footer-btm{background:#040406;border-top:1px solid var(--border);padding:16px 52px;display:flex;justify-content:space-between;font-size:12px;color:var(--soft);}
+
+/* UTILS */
+.tc{text-align:center;}
+.mt48{margin-top:48px;}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s;}
+.reveal.vis{opacity:1;transform:none;}
+.rd1{transition-delay:.1s;}.rd2{transition-delay:.2s;}.rd3{transition-delay:.3s;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+@media(max-width:900px){
+  nav{padding:0 18px;}.nav-links{display:none;}
+  .hero{padding:100px 18px 60px;}.hero-grid{grid-template-columns:1fr;gap:40px;}
+  .hero-visual{display:none;}
+  .prob-grid,.feat-grid,.test-grid,.price-grid{grid-template-columns:1fr;}
+  .how-layout,.earn-layout{grid-template-columns:1fr;gap:40px;}
+  .sec,.cta-sec{padding:60px 18px;}
+  .footer{grid-template-columns:1fr;padding:40px 18px;}
+  .footer-btm{flex-direction:column;gap:6px;padding:14px 18px;}
+  .dash-layout{grid-template-columns:1fr;}.dash-side{display:none;}
+  .dash-main{padding:20px 16px;}.kpi-grid,.dgrid2,.dgrid3{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="curR"></div>
+<div class="toast" id="toast"><span id="t-ico">✅</span><span id="t-msg">Done!</span></div>
+
+<!-- ══ HOME PAGE ══════════════════════════════════════════ -->
+<div id="page-home" class="page active">
+  <nav>
+    <div class="logo" onclick="go('home')"><span class="logo-dot"></span>REALFACE</div>
+    <ul class="nav-links">
+      <li><a href="#" onclick="go('home');return false;">How It Works</a></li>
+      <li><a href="#" onclick="go('home');return false;">Features</a></li>
+      <li><a href="#" onclick="go('pricing');return false;">Pricing</a></li>
+      <li><a href="#" onclick="go('dashboard');return false;">Dashboard</a></li>
+    </ul>
+    <div class="nav-r">
+      <button class="btn btn-ghost" onclick="openAuth('login')">Log In</button>
+      <button class="btn btn-green" onclick="openAuth('signup')">Get Verified Free →</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-grid">
+      <div>
+        <div class="hero-eyebrow"><span class="hero-eyebrow-dot"></span>The Internet's Trust Layer</div>
+        <h1>The Internet<br>Full of <em>Fakes.</em><br>We Are Not.</h1>
+        <p class="hero-desc">REALFACE is the world's first platform where <strong>every single member is verified as a real living human being.</strong> No bots. No AI. No fakes. Ever.</p>
+        <div class="hero-actions">
+          <button class="btn btn-green btn-lg" onclick="openVerify()">Get Verified Free →</button>
+          <button class="btn btn-ghost btn-lg" onclick="go('dashboard')">See Dashboard</button>
+        </div>
+        <div class="hero-stats">
+          <div><span class="hs-n" id="hs1">0</span><span class="hs-l">Verified Humans</span></div>
+          <div><span class="hs-n" id="hs2">0%</span><span class="hs-l">Fake Accounts</span></div>
+          <div><span class="hs-n" id="hs3">0</span><span class="hs-l">Countries</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="vc">
+          <div class="vc-hd">
+            <div class="vc-title">Live Verification Challenge</div>
+            <div class="vc-live"><span class="vc-live-dot"></span>LIVE</div>
+          </div>
+          <div class="challenge-box">
+            <span class="ch-big-emoji" id="hero-emoji">👋</span>
+            <div class="ch-instruction" id="hero-inst">Wave your LEFT hand right now</div>
+            <div class="ch-sub">AI cannot do this — only a real human can</div>
+          </div>
+          <div class="timer-wrap">
+            <div class="timer-bar"><div class="timer-fill"></div></div>
+            <div class="timer-label"><span>Verifying...</span><span id="hero-timer">6s</span></div>
+          </div>
+          <div class="users-row">
+            <div class="avatars">
+              <div class="av">👩</div><div class="av">👨</div><div class="av">🧑</div><div class="av">👴</div><div class="av">👧</div>
+            </div>
+            <div class="users-text"><span>2,841</span> people verified today</div>
+          </div>
+        </div>
+        <div class="fbadge fb1"><span style="color:var(--green)">✓</span> HUMAN VERIFIED</div>
+        <div class="fbadge fb2">🤖 AI Detected — <span style="color:var(--red)">BLOCKED</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="sec" style="background:rgba(255,255,255,0.01);">
+    <div style="max-width:1200px;margin:0 auto;">
+      <div class="sec-label">The Problem</div>
+      <h2>The Internet is<br>Broken by Fakes</h2>
+      <p class="s-desc">In 2026, you cannot trust who you are talking to online. REALFACE fixes that forever.</p>
+      <div class="prob-grid reveal">
+        <div class="prob-card">
+          <div class="prob-stat red">60%</div>
+          <div class="prob-lbl">Internet Traffic is Bots</div>
+          <div class="prob-desc">More than half of all online activity is automated — not real humans. Dating apps, LinkedIn, Twitter — all flooded.</div>
+        </div>
+        <div class="prob-card">
+          <div class="prob-stat amber">$78B</div>
+          <div class="prob-lbl">Lost to Online Fraud Yearly</div>
+          <div class="prob-desc">People are scammed by fake profiles, fake businesses and fake identities every single day. No platform stops it.</div>
+        </div>
+        <div class="prob-card">
+          <div class="prob-stat green">1</div>
+          <div class="prob-lbl">Platform Solving This</div>
+          <div class="prob-desc">Nobody has built a complete human verification network yet. REALFACE is the first. The window is right now.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="sec">
+    <div style="max-width:1200px;margin:0 auto;">
+      <div class="sec-label">How It Works</div>
+      <h2>Impossible to Fake.<br>Simple to Use.</h2>
+      <p class="s-desc">Our AI-powered live challenge system verifies you are human in under 60 seconds. Then you are verified forever.</p>
+      <div class="how-layout">
+        <div class="steps">
+          <div class="step reveal">
+            <div class="step-n">01</div>
+            <div>
+              <div class="step-title">Sign Up in 30 Seconds</div>
+              <div class="step-desc">Create your account with email or social login. No long forms. No credit card.</div>
+            </div>
+          </div>
+          <div class="step reveal rd1">
+            <div class="step-n">02</div>
+            <div>
+              <div class="step-title">Receive a Random Live Challenge</div>
+              <div class="step-desc">Our system gives you a random real-time physical challenge — completely unpredictable. AI cannot pass this. Ever.</div>
+            </div>
+          </div>
+          <div class="step reveal rd2">
+            <div class="step-n">03</div>
+            <div>
+              <div class="step-title">Complete It Live on Camera</div>
+              <div class="step-desc">You complete the challenge via your phone camera in real time. Takes under 60 seconds.</div>
+            </div>
+          </div>
+          <div class="step reveal rd3">
+            <div class="step-n">04</div>
+            <div>
+              <div class="step-title">Get Your REALFACE Badge</div>
+              <div class="step-desc">You receive a permanent verified human badge. Re-verify every 30 days automatically. You are now trusted everywhere.</div>
+            </div>
+          </div>
+        </div>
+        <div class="chal-demo reveal">
+          <div class="cd-label">Challenge Examples</div>
+          <div class="chal-cards">
+            <div class="chl-card active">
+              <div class="chl-ico">👋</div>
+              <div class="chl-inf"><div class="chl-name">Wave Left Hand</div><div class="chl-desc">Physical movement challenge</div></div>
+              <div class="chl-st st-live">LIVE NOW</div>
+            </div>
+            <div class="chl-card">
+              <div class="chl-ico">😂</div>
+              <div class="chl-inf"><div class="chl-name">Make This Exact Face</div><div class="chl-desc">Facial expression challenge</div></div>
+              <div class="chl-st st-pass">✓ PASSED</div>
+            </div>
+            <div class="chl-card">
+              <div class="chl-ico">✍️</div>
+              <div class="chl-inf"><div class="chl-name">Write Today's Date</div><div class="chl-desc">Real-time proof challenge</div></div>
+              <div class="chl-st st-pass">✓ PASSED</div>
+            </div>
+            <div class="chl-card">
+              <div class="chl-ico">🤖</div>
+              <div class="chl-inf"><div class="chl-name">AI Bot Attempt</div><div class="chl-desc">Tried to fake verification</div></div>
+              <div class="chl-st st-fail">✗ BLOCKED</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="sec" style="background:rgba(255,255,255,0.01);">
+    <div style="max-width:1200px;margin:0 auto;">
+      <div class="sec-label">What You Get</div>
+      <h2>Everything Built<br>for Real Humans</h2>
+      <p class="s-desc">REALFACE is not just verification. It is a full ecosystem of trust — for dating, business, commerce and beyond.</p>
+      <div class="feat-grid">
+        <div class="feat-card reveal">
+          <div class="feat-ico">💕</div>
+          <h3>REAL Dating</h3>
+          <p>The only dating platform where every profile is a verified living human. Zero catfish. Zero bots. Zero fake photos.</p>
+          <div class="feat-tag">→ Coming Soon</div>
+        </div>
+        <div class="feat-card reveal rd1">
+          <div class="feat-ico">💼</div>
+          <h3>REAL Business Network</h3>
+          <p>Like LinkedIn but every connection is genuinely real. No fake recruiters. No AI-generated profiles. Real professionals only.</p>
+          <div class="feat-tag">→ Live Now</div>
+        </div>
+        <div class="feat-card reveal rd2">
+          <div class="feat-ico">⭐</div>
+          <h3>REAL Reviews</h3>
+          <p>Reviews that carry a Human Certified badge. Worth 100x more than any Google review. Businesses pay for this trust.</p>
+          <div class="feat-tag">→ Live Now</div>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-ico">📰</div>
+          <h3>REAL News Feed</h3>
+          <p>Only verified humans can post news and updates. Instantly kills AI-generated fake news and propaganda.</p>
+          <div class="feat-tag">→ Beta</div>
+        </div>
+        <div class="feat-card reveal rd1">
+          <div class="feat-ico">💰</div>
+          <h3>REAL Commerce</h3>
+          <p>Buy and sell with verified real humans only. Zero scam risk. Every seller and buyer is a real living person.</p>
+          <div class="feat-tag">→ Coming Soon</div>
+        </div>
+        <div class="feat-card reveal rd2">
+          <div class="feat-ico">🔌</div>
+          <h3>REALFACE API</h3>
+          <p>Banks, insurance firms and governments integrate our verification API to confirm their users are real humans.</p>
+          <div class="feat-tag">→ Enterprise</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EARN -->
+  <section class="sec">
+    <div style="max-width:1200px;margin:0 auto;">
+      <div class="earn-layout">
+        <div>
+          <div class="sec-label">Revenue Model</div>
+          <h2>8 Ways REALFACE<br>Makes Money</h2>
+          <p class="s-desc">This is not a one-trick platform. Every layer of trust creates a new revenue stream.</p>
+          <div class="earn-streams">
+            <div class="earn-item reveal">
+              <div class="ei-ico">👤</div>
+              <div class="ei-inf"><div class="ei-name">User Subscriptions</div><div class="ei-desc">$9.99/month for full access</div></div>
+              <div class="ei-amt">$9.99/mo</div>
+            </div>
+            <div class="earn-item reveal rd1">
+              <div class="ei-ico">💕</div>
+              <div class="ei-inf"><div class="ei-name">Dating Premium</div><div class="ei-desc">$19.99/month enhanced features</div></div>
+              <div class="ei-amt">$19.99/mo</div>
+            </div>
+            <div class="earn-item reveal rd2">
+              <div class="ei-ico">🏢</div>
+              <div class="ei-inf"><div class="ei-name">Business API</div><div class="ei-desc">Banks and firms pay monthly</div></div>
+              <div class="ei-amt">$999/mo</div>
+            </div>
+            <div class="earn-item reveal">
+              <div class="ei-ico">⭐</div>
+              <div class="ei-inf"><div class="ei-name">Verified Badge for Businesses</div><div class="ei-desc">Display trust on their website</div></div>
+              <div class="ei-amt">$49/mo</div>
+            </div>
+            <div class="earn-item reveal rd1">
+              <div class="ei-ico">🏛️</div>
+              <div class="ei-inf"><div class="ei-name">Government Contracts</div><div class="ei-desc">Elections, census, benefits</div></div>
+              <div class="ei-amt">$100K+</div>
+            </div>
+          </div>
+        </div>
+        <div class="rev-card reveal">
+          <div class="rev-lbl">Revenue Projection</div>
+          <div class="rev-rows">
+            <div class="rev-row">
+              <div class="rev-top"><span class="rev-yr">Month 6</span><span class="rev-amt">$50K/mo</span></div>
+              <div class="rev-bar"><div class="rev-fill" style="width:5%"></div></div>
+            </div>
+            <div class="rev-row">
+              <div class="rev-top"><span class="rev-yr">Year 1</span><span class="rev-amt">$500K/mo</span></div>
+              <div class="rev-bar"><div class="rev-fill" style="width:20%"></div></div>
+            </div>
+            <div class="rev-row">
+              <div class="rev-top"><span class="rev-yr">Year 2</span><span class="rev-amt">$5M/mo</span></div>
+              <div class="rev-bar"><div class="rev-fill" style="width:55%"></div></div>
+            </div>
+            <div class="rev-row">
+              <div class="rev-top"><span class="rev-yr">Year 3</span><span class="rev-amt">$50M/mo</span></div>
+              <div class="rev-bar"><div class="rev-fill" style="width:100%"></div></div>
+            </div>
+          </div>
+          <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);font-size:13px;color:var(--soft);line-height:1.65;">
+            Based on 0.1% of internet users paying $9.99/month. The market is every human on earth. 🌍
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="sec" style="background:rgba(255,255,255,0.01);">
+    <div style="max-width:1200px;margin:0 auto;">
+      <div class="sec-label tc" style="justify-content:center;">Early Members</div>
+      <h2 class="tc">Real Humans Love It</h2>
+      <div class="test-grid">
+        <div class="test-card reveal">
+          <div class="test-stars">★★★★★</div>
+          <p class="test-text">"I deleted every dating app after joining REALFACE. <strong>For the first time I know every person I talk to is actually real.</strong> This changes everything."</p>
+          <div class="test-author">
+            <div class="test-av">👩</div>
+            <div><div class="test-name">Sara K.</div><div class="test-role">Designer · Lagos</div></div>
+            <div class="test-badge">✓ Verified Human</div>
+          </div>
+        </div>
+        <div class="test-card reveal rd1">
+          <div class="test-stars">★★★★★</div>
+          <p class="test-text">"We integrated the REALFACE API into our loan process. <strong>Fraud dropped by 94% in the first month.</strong> Worth every penny of the enterprise plan."</p>
+          <div class="test-author">
+            <div class="test-av">👨</div>
+            <div><div class="test-name">James O.</div><div class="test-role">CTO · London Bank</div></div>
+            <div class="test-badge">✓ Enterprise</div>
+          </div>
+        </div>
+        <div class="test-card reveal rd2">
+          <div class="test-stars">★★★★★</div>
+          <p class="test-text">"As an investor I have seen 200+ platforms. <strong>REALFACE is the only one solving the most important problem of the AI era</strong> — trust."</p>
+          <div class="test-author">
+            <div class="test-av">🧑</div>
+            <div><div class="test-name">Marco V.</div><div class="test-role">Angel Investor · Milan</div></div>
+            <div class="test-badge">✓ Investor</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-sec">
+    <div class="cta-bg"></div>
+    <div class="sec-label tc" style="justify-content:center;">Join Now</div>
+    <h2>The Internet Needs You<br>to Be <em>Real.</em></h2>
+    <p class="cta-desc">Be one of the first verified humans on the only platform that guarantees every member is real. Free forever for individuals.</p>
+    <div class="cta-actions">
+      <button class="btn btn-green btn-lg" onclick="openVerify()">Get Verified Free →</button>
+      <button class="btn btn-ghost btn-lg" onclick="openAuth('login')">Already a member? Log In</button>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-brand">
+      <div class="logo" style="margin-bottom:4px;"><span class="logo-dot"></span>REALFACE</div>
+      <p>The world's first human verification social network. In the AI era, we are proof that you are real.</p>
+    </div>
+    <div><div class="fc-t">Platform</div><ul class="fc-l"><li><a href="#">How It Works</a></li><li><a href="#" onclick="go('pricing');return false;">Pricing</a></li><li><a href="#">Enterprise API</a></li><li><a href="#" onclick="go('dashboard');return false;">Dashboard</a></li></ul></div>
+    <div><div class="fc-t">Company</div><ul class="fc-l"><li><a href="#">About</a></li><li><a href="#">Blog</a></li><li><a href="#">Careers</a></li><li><a href="#">Press</a></li></ul></div>
+    <div><div class="fc-t">Legal</div><ul class="fc-l"><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li><li><a href="#">Cookies</a></li><li><a href="#">Security</a></li></ul></div>
+  </footer>
+  <div class="footer-btm"><span>© 2026 REALFACE Inc. — The Internet's Trust Layer</span><span>Powered by humans 🤝</span></div>
+</div>
+
+<!-- ══ PRICING PAGE ═══════════════════════════════════════ -->
+<div id="page-pricing" class="page">
+  <nav><div class="logo" onclick="go('home')"><span class="logo-dot"></span>REALFACE</div><ul class="nav-links"><li><a href="#" onclick="go('home');return false;">Home</a></li><li><a href="#" onclick="go('pricing');return false;">Pricing</a></li><li><a href="#" onclick="go('dashboard');return false;">Dashboard</a></li></ul><div class="nav-r"><button class="btn btn-ghost" onclick="openAuth('login')">Log In</button><button class="btn btn-green" onclick="openVerify()">Get Verified →</button></div></nav>
+  <section class="sec tc" style="padding-top:130px;">
+    <div style="max-width:1100px;margin:0 auto;">
+      <div class="sec-label tc" style="justify-content:center;">Simple Pricing</div>
+      <h2>Start Free.<br>Scale When Ready.</h2>
+      <p class="s-desc" style="margin:0 auto;">No hidden fees. Individual verification is free forever. Upgrade for more features and business tools.</p>
+      <div class="price-grid" style="margin-top:56px;">
+        <div class="price-card">
+          <div class="price-plan">Individual</div>
+          <div class="price-amt">$0</div>
+          <div class="price-period">forever free</div>
+          <ul class="price-feats">
+            <li>Full human verification</li>
+            <li>REALFACE verified badge</li>
+            <li>Real connections network</li>
+            <li>Verified reviews (3/month)</li>
+            <li>Real news feed access</li>
+            <li>30-day re-verification</li>
+          </ul>
+          <button class="btn btn-outline-green w-full" onclick="openVerify()">Get Verified Free</button>
+        </div>
+        <div class="price-card feat">
+          <div class="feat-badge">Most Popular</div>
+          <div class="price-plan">Pro Human</div>
+          <div class="price-amt">$9.99</div>
+          <div class="price-period">per month</div>
+          <ul class="price-feats">
+            <li>Everything in Free</li>
+            <li>REAL Dating access</li>
+            <li>Unlimited verified reviews</li>
+            <li>Priority verification queue</li>
+            <li>Advanced trust score</li>
+            <li>Business profile</li>
+            <li>Human-only job board</li>
+          </ul>
+          <button class="btn btn-white w-full" onclick="openAuth('signup')">Start Pro →</button>
+        </div>
+        <div class="price-card">
+          <div class="price-plan">Enterprise</div>
+          <div class="price-amt">$999</div>
+          <div class="price-period">per month</div>
+          <ul class="price-feats">
+            <li>Full verification API</li>
+            <li>Bulk verification tools</li>
+            <li>Custom challenge sets</li>
+            <li>White-label option</li>
+            <li>Legal-grade certificates</li>
+            <li>Dedicated account manager</li>
+            <li>SLA guarantee</li>
+          </ul>
+          <button class="btn btn-outline-green w-full" onclick="toast('Our team will contact you within 24 hours!','📧')">Contact Sales</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer class="footer"><div class="footer-brand"><div class="logo" style="margin-bottom:4px;"><span class="logo-dot"></span>REALFACE</div><p>The internet's trust layer.</p></div><div><div class="fc-t">Navigate</div><ul class="fc-l"><li><a href="#" onclick="go('home');return false;">Home</a></li><li><a href="#" onclick="go('dashboard');return false;">Dashboard</a></li></ul></div><div></div><div></div></footer>
+  <div class="footer-btm"><span>© 2026 REALFACE Inc.</span><span>🤝</span></div>
+</div>
+
+<!-- ══ DASHBOARD ══════════════════════════════════════════ -->
+<div id="page-dashboard" class="page">
+  <nav><div class="logo" onclick="go('home')"><span class="logo-dot"></span>REALFACE</div><ul class="nav-links"></ul><div class="nav-r"><div class="verified-pill"><span class="vp-dot"></span><span class="vp-label">✓ VERIFIED HUMAN</span></div><div style="width:34px;height:34px;border-radius:50%;background:rgba(0,232,122,0.1);border:1px solid rgba(0,232,122,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:none;">👤</div></div></nav>
+  <div class="dash-layout">
+    <div class="dash-side">
+      <div class="dn-sec">Main</div>
+      <div class="dn-item active" onclick="dTab(this)">🏠 Overview</div>
+      <div class="dn-item" onclick="dTab(this)">👥 My Network</div>
+      <div class="dn-item" onclick="dTab(this)">⭐ My Reviews</div>
+      <div class="dn-sec">Features</div>
+      <div class="dn-item" onclick="dTab(this)">💕 REAL Dating</div>
+      <div class="dn-item" onclick="dTab(this)">📰 REAL News</div>
+      <div class="dn-item" onclick="dTab(this)">🛒 REAL Commerce</div>
+      <div class="dn-sec">Account</div>
+      <div class="dn-item" onclick="dTab(this)">🔒 Verify Again</div>
+      <div class="dn-item" onclick="go('pricing')">⭐ Upgrade to Pro</div>
+      <div class="dn-item" onclick="go('home')" style="margin-top:16px;color:var(--red);">← Back to Site</div>
+    </div>
+    <div class="dash-main">
+      <div class="dash-top">
+        <div><h2 id="dash-greet">Good morning, Yasir 👋</h2><p>Your human verification status and network overview.</p></div>
+        <div class="verified-pill"><span class="vp-dot"></span><span class="vp-label">✓ HUMAN VERIFIED — 28 days remaining</span></div>
+      </div>
+      <div class="kpi-grid">
+        <div class="kpi"><div class="kpi-l">Trust Score</div><div class="kpi-v" id="d-trust" style="color:var(--green)">0</div><div class="kpi-c">↑ Top 8% globally</div></div>
+        <div class="kpi"><div class="kpi-l">Real Connections</div><div class="kpi-v" id="d-conn">0</div><div class="kpi-c">↑ 12 this week</div></div>
+        <div class="kpi"><div class="kpi-l">Reviews Given</div><div class="kpi-v" id="d-revs">0</div><div class="kpi-c">All Human Certified</div></div>
+        <div class="kpi"><div class="kpi-l">Times Verified</div><div class="kpi-v" id="d-times">0</div><div class="kpi-c">Member since Jan 2026</div></div>
+      </div>
+      <div class="dgrid2">
+        <div class="dp">
+          <div class="dp-hd"><div class="dp-t">Verification History</div><span style="font-size:11px;color:var(--soft)">All passed ✓</span></div>
+          <div class="dp-b">
+            <div class="mini-chart" id="mini-chart"></div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--soft);margin-top:6px;" id="chart-labels"></div>
+          </div>
+        </div>
+        <div class="dp">
+          <div class="dp-hd"><div class="dp-t">Recent Activity</div></div>
+          <div class="dp-b">
+            <div class="act-item"><div class="act-ico" style="background:rgba(0,232,122,0.08)">✓</div><div class="act-inf"><div class="act-t">Verification Passed</div><div class="act-s">Monthly reverification · 2h ago</div></div><div class="act-a">+10pts</div></div>
+            <div class="act-item"><div class="act-ico" style="background:rgba(77,159,255,0.08)">💕</div><div class="act-inf"><div class="act-t">New Match — Sara K.</div><div class="act-s">REAL Dating · Verified human</div></div><div class="act-a">New</div></div>
+            <div class="act-item"><div class="act-ico" style="background:rgba(255,184,0,0.08)">⭐</div><div class="act-inf"><div class="act-t">Review Posted — Certified</div><div class="act-s">TechCorp software review</div></div><div class="act-a">+5pts</div></div>
+            <div class="act-item"><div class="act-ico" style="background:rgba(255,59,59,0.08)">🚫</div><div class="act-inf"><div class="act-t">Bot Blocked Near You</div><div class="act-s">AI fake account attempt stopped</div></div><div class="act-a" style="color:var(--red)">Blocked</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="dgrid3">
+        <div class="dp">
+          <div class="dp-hd"><div class="dp-t">Real People Feed</div><span style="font-size:11px;background:rgba(0,232,122,0.08);border:1px solid rgba(0,232,122,0.15);color:var(--green);padding:3px 9px;border-radius:20px;font-weight:700;">All Verified Humans</span></div>
+          <div class="dp-b">
+            <div class="feed-item">
+              <div class="feed-av">👩</div>
+              <div class="feed-inf">
+                <div class="feed-name">Sara K. <span class="vtick">✓</span></div>
+                <div class="feed-txt">Just launched my new design studio! Looking for real human collaborators — no AI agencies please 🎨</div>
+                <div class="feed-time">14 min ago · Lagos, Nigeria</div>
+              </div>
+            </div>
+            <div class="feed-item">
+              <div class="feed-av">👨</div>
+              <div class="feed-inf">
+                <div class="feed-name">Ahmed R. <span class="vtick">✓</span></div>
+                <div class="feed-txt">REALFACE just helped me close a $50K deal. Client verified I was a real human developer. Trust is everything now.</div>
+                <div class="feed-time">1 hour ago · Cairo, Egypt</div>
+              </div>
+            </div>
+            <div class="feed-item">
+              <div class="feed-av">🧑</div>
+              <div class="feed-inf">
+                <div class="feed-name">Priya M. <span class="vtick">✓</span></div>
+                <div class="feed-txt">My Human Certified review got 2,400 upvotes. Brands are paying 10x for real human feedback now 📊</div>
+                <div class="feed-time">3 hours ago · Mumbai, India</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dp">
+          <div class="dp-hd"><div class="dp-t">Your Trust Score</div></div>
+          <div class="dp-b">
+            <div style="text-align:center;padding:10px 0;">
+              <div style="font-family:'Syne',sans-serif;font-size:52px;font-weight:800;color:var(--green);letter-spacing:-2px;" id="trust-big">0</div>
+              <div style="font-size:13px;color:var(--soft);margin-bottom:18px;">out of 1,000</div>
+              <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:14px;">
+                <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--soft);margin-bottom:8px;"><span>Verifications</span><span style="color:var(--green);font-weight:700;">+120</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--soft);margin-bottom:8px;"><span>Real Reviews</span><span style="color:var(--green);font-weight:700;">+85</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--soft);"><span>Network Quality</span><span style="color:var(--green);font-weight:700;">+92</span></div>
+              </div>
+              <button class="btn btn-outline-green w-full" style="margin-top:16px;font-size:12px;" onclick="openVerify()">Re-Verify Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: AUTH ════════════════════════════════════════ -->
+<div class="mo" id="mo-auth" onclick="mClose(event,'mo-auth')">
+  <div class="modal modal-sm">
+    <div class="auth-top"><h3 id="auth-title">Join REALFACE Free</h3><p id="auth-sub">Become a verified human today</p></div>
+    <div class="auth-body">
+      <div class="soc-btns">
+        <button class="soc-btn" onclick="socialAuth('Google')">🌐 &nbsp;Continue with Google</button>
+        <button class="soc-btn" onclick="socialAuth('Apple')">🍎 &nbsp;Continue with Apple</button>
+      </div>
+      <div class="divider">or use email</div>
+      <div id="auth-name-fields" class="frow" style="display:none;">
+        <div class="fg"><label class="fl">First Name</label><input class="fi" id="a-fn" placeholder="Yasir"/></div>
+        <div class="fg"><label class="fl">Last Name</label><input class="fi" id="a-ln" placeholder="Khan"/></div>
+      </div>
+      <div class="fg"><label class="fl">Email Address</label><input class="fi" id="a-email" placeholder="you@email.com"/></div>
+      <div class="fg"><label class="fl">Password</label><input class="fi" type="password" id="a-pass" placeholder="8+ characters"/></div>
+      <button class="btn btn-green w-full" style="padding:14px;" id="auth-btn" onclick="doAuth()"><span id="auth-btn-txt">Create Free Account →</span></button>
+      <div class="auth-switch" id="auth-switch">Already verified? <a href="#" onclick="openAuth('login');return false;">Log In</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: VERIFICATION ════════════════════════════════ -->
+<div class="mo" id="mo-verify" onclick="mClose(event,'mo-verify')">
+  <div class="modal modal-sm">
+    <div class="mhd">
+      <div><div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;letter-spacing:-.4px;">Human Verification</div><div style="font-size:13px;color:var(--soft);margin-top:2px;">Step <span id="v-step-num">1</span> of 3</div></div>
+      <button class="mclose" onclick="closeM('mo-verify')">✕</button>
+    </div>
+    <div class="mbd">
+      <div style="display:flex;gap:7px;margin-bottom:26px;">
+        <div style="height:3px;border-radius:2px;flex:1;background:var(--green)" id="vs1"></div>
+        <div style="height:3px;border-radius:2px;flex:1;background:var(--border)" id="vs2"></div>
+        <div style="height:3px;border-radius:2px;flex:1;background:var(--border)" id="vs3"></div>
+      </div>
+
+      <!-- Step 1 -->
+      <div id="vsp1" class="vsp">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;letter-spacing:-.4px;margin-bottom:5px;">Ready to prove you're human? 🤝</div>
+        <div style="font-size:13px;color:var(--soft);margin-bottom:22px;line-height:1.6;">We will give you a random live challenge. Complete it on camera. Takes under 60 seconds. AI cannot pass this.</div>
+        <div style="background:rgba(0,232,122,0.04);border:1px solid rgba(0,232,122,0.1);border-radius:14px;padding:18px;margin-bottom:20px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><span style="font-size:18px;">🔒</span><div style="font-size:13px;color:var(--soft);line-height:1.6;">Your verification video is <strong style="color:var(--white)">never stored</strong>. We only record whether you passed or failed.</div></div>
+          <div style="display:flex;gap:12px;align-items:flex-start;"><span style="font-size:18px;">🎲</span><div style="font-size:13px;color:var(--soft);line-height:1.6;">Challenges are <strong style="color:var(--white)">100% random</strong> and unpredictable — impossible to pre-program or fake.</div></div>
+        </div>
+        <button class="btn btn-green w-full btn-lg" onclick="goVStep(2)">Start Verification →</button>
+      </div>
+
+      <!-- Step 2 -->
+      <div id="vsp2" class="vsp" style="display:none;">
+        <div class="verify-box">
+          <span class="v-emoji" id="v-emoji">👋</span>
+          <div class="v-inst" id="v-inst">Wave your LEFT hand right now</div>
+          <div class="v-sub" id="v-sub">Hold it up clearly in frame for 3 seconds</div>
+        </div>
+        <div class="v-timer"><div class="v-fill" id="v-fill"></div></div>
+        <div class="v-time-row"><span>AI cannot do this</span><span id="v-countdown">10s</span></div>
+        <div style="font-size:13px;color:var(--soft);text-align:center;margin:14px 0;">Verifying your response in real time...</div>
+        <button class="btn btn-green w-full" onclick="completeVerify()">✓ I Completed The Challenge</button>
+      </div>
+
+      <!-- Step 3 -->
+      <div id="vsp3" class="vsp" style="display:none;">
+        <div class="success-screen">
+          <span class="s-ico">🎉</span>
+          <h3>You Are Verified!</h3>
+          <p>Welcome to REALFACE — the only place on the internet where every single person is a real verified human.</p>
+          <div style="background:rgba(0,232,122,0.05);border:1px solid rgba(0,232,122,0.15);border-radius:14px;padding:16px;margin-bottom:22px;">
+            <div style="font-size:12px;color:var(--soft);margin-bottom:7px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;">Your Verification Badge</div>
+            <div style="display:flex;align-items:center;gap:10px;justify-content:center;">
+              <div style="width:42px;height:42px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--black);font-weight:900;">✓</div>
+              <div style="text-align:left;"><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;letter-spacing:-.3px;">HUMAN VERIFIED</div><div style="font-size:12px;color:var(--soft);">Valid for 30 days · REALFACE Inc.</div></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+            <button class="btn btn-green" onclick="closeM('mo-verify');go('dashboard');">Go to Dashboard →</button>
+            <button class="btn btn-ghost" onclick="closeM('mo-verify')">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  REALFACE — Frontend JavaScript
+// ══════════════════════════════════════════════════════
+
+// CURSOR
+const cur=document.getElementById('cur'),curR=document.getElementById('curR');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function L(){rx+=(mx-rx)*.13;ry+=(my-ry)*.13;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(L);})();
+document.addEventListener('mouseover',e=>{if(e.target.matches('a,button,.feat-card,.test-card,.price-card,.earn-item,.step,.dn-item,.soc-btn,.chl-card,.prob-card'))document.body.classList.add('hs');else document.body.classList.remove('hs');});
+
+// TOAST
+function toast(msg,ico='✅',dur=3500){
+  document.getElementById('t-ico').textContent=ico;
+  document.getElementById('t-msg').textContent=msg;
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
+}
+
+// PAGE NAV
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='dashboard')loadDashboard();
+}
+
+// SCROLL REVEAL
+const ro=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');}),{threshold:.1,rootMargin:'0 0 -40px 0'});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+// HERO STATS ANIMATION
+function animCount(id,target,suffix='',prefix=''){
+  const el=document.getElementById(id);if(!el)return;
+  const dur=2000;const start=Date.now();
+  (function t(){const p=Math.min((Date.now()-start)/dur,1);const e=1-Math.pow(1-p,3);const v=Math.floor(e*target);
+  el.textContent=prefix+(v>=1000?(v>=1000000?(v/1000000).toFixed(1)+'M':(v/1000).toFixed(0)+'K'):v)+suffix;
+  if(p<1)requestAnimationFrame(t);})();
+}
+
+const statsObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){animCount('hs1',247000);animCount('hs2',0,'%');animCount('hs3',142);statsObs.disconnect();}});},{threshold:.3});
+const heroStats=document.querySelector('.hero-stats');
+if(heroStats)statsObs.observe(heroStats);
+
+// HERO CHALLENGE ROTATION
+const challenges=[
+  {emoji:'👋',text:'Wave your LEFT hand right now'},
+  {emoji:'😜',text:'Stick out your tongue and blink'},
+  {emoji:'✍️',text:'Write today\'s date on paper & hold it up'},
+  {emoji:'🤚',text:'Hold up 3 fingers on your right hand'},
+  {emoji:'😂',text:'Make your biggest smile right now'},
+  {emoji:'👁️',text:'Wink your RIGHT eye twice'},
+];
+let chIdx=0;
+setInterval(()=>{
+  chIdx=(chIdx+1)%challenges.length;
+  const el=document.getElementById('hero-emoji');
+  const inst=document.getElementById('hero-inst');
+  if(el&&inst){el.textContent=challenges[chIdx].emoji;inst.textContent=challenges[chIdx].text;}
+},6000);
+
+// Hero timer countdown
+let heroTime=6;
+setInterval(()=>{
+  heroTime=heroTime<=1?6:heroTime-1;
+  const el=document.getElementById('hero-timer');
+  if(el)el.textContent=heroTime+'s';
+},1000);
+
+// MODALS
+function openAuth(mode){
+  const isSignup=mode==='signup';
+  document.getElementById('auth-title').textContent=isSignup?'Join REALFACE Free':'Welcome Back';
+  document.getElementById('auth-sub').textContent=isSignup?'Become a verified human today':'Log in to your verified account';
+  document.getElementById('auth-btn-txt').textContent=isSignup?'Create Free Account →':'Log In →';
+  document.getElementById('auth-switch').innerHTML=isSignup?'Already verified? <a href="#" onclick="openAuth(\'login\');return false;" style="color:var(--green);font-weight:600;cursor:none;">Log In</a>':'No account? <a href="#" onclick="openAuth(\'signup\');return false;" style="color:var(--green);font-weight:600;cursor:none;">Sign Up Free</a>';
+  document.getElementById('auth-name-fields').style.display=isSignup?'grid':'none';
+  document.getElementById('mo-auth').classList.add('open');
+}
+
+function doAuth(){
+  const btn=document.getElementById('auth-btn-txt');
+  btn.innerHTML='<span style="display:inline-flex;align-items:center;gap:8px;"><span style="width:14px;height:14px;border:2px solid rgba(0,0,0,.3);border-top-color:#000;border-radius:50%;animation:spin .7s linear infinite;display:inline-block"></span>Please wait…</span>';
+  setTimeout(()=>{
+    closeM('mo-auth');
+    toast('Welcome to REALFACE! Now get verified 🎉');
+    setTimeout(()=>openVerify(),800);
+  },1500);
+}
+
+function socialAuth(provider){
+  toast('Connecting to '+provider+'…','🔗',1500);
+  setTimeout(()=>{closeM('mo-auth');toast('Signed in! Now complete verification.','✅');setTimeout(()=>openVerify(),600);},1500);
+}
+
+function closeM(id){document.getElementById(id).classList.remove('open');}
+function mClose(e,id){if(e.target===document.getElementById(id))closeM(id);}
+
+// VERIFICATION FLOW
+let vTimer=null;
+const vChallenges=[
+  {emoji:'👋',text:'Wave your LEFT hand right now',sub:'Hold it up clearly in frame for 3 seconds'},
+  {emoji:'😜',text:'Stick out your tongue and blink twice',sub:'AI cannot replicate spontaneous expressions'},
+  {emoji:'✍️',text:'Write today\'s date and hold it up',sub:'Must be handwritten on real paper right now'},
+  {emoji:'🤚',text:'Hold up exactly 3 fingers',sub:'Right hand only — respond within 10 seconds'},
+  {emoji:'👁️',text:'Wink your RIGHT eye twice slowly',sub:'Look directly at the camera while doing this'},
+];
+
+function openVerify(){
+  closeM('mo-auth');
+  const ch=vChallenges[Math.floor(Math.random()*vChallenges.length)];
+  document.getElementById('v-emoji').textContent=ch.emoji;
+  document.getElementById('v-inst').textContent=ch.text;
+  document.getElementById('v-sub').textContent=ch.sub;
+  goVStep(1);
+  document.getElementById('mo-verify').classList.add('open');
+}
+
+function goVStep(n){
+  document.getElementById('v-step-num').textContent=n;
+  ['vsp1','vsp2','vsp3'].forEach((id,i)=>{document.getElementById(id).style.display=i+1===n?'block':'none';});
+  [1,2,3].forEach(i=>{const el=document.getElementById('vs'+i);el.style.background=i<=n?'var(--green)':'var(--border)';});
+  if(n===2)startVerifyTimer();
+}
+
+function startVerifyTimer(){
+  let t=10;
+  const fill=document.getElementById('v-fill');
+  const countdown=document.getElementById('v-countdown');
+  if(vTimer)clearInterval(vTimer);
+  vTimer=setInterval(()=>{
+    t--;
+    if(countdown)countdown.textContent=t+'s';
+    if(fill)fill.style.width=(t/10)*100+'%';
+    if(t<=0){clearInterval(vTimer);}
+  },1000);
+}
+
+function completeVerify(){
+  if(vTimer)clearInterval(vTimer);
+  goVStep(3);
+  loadDashboard();
+  toast('Verification complete! You are now a verified human ✓','🎉',5000);
+}
+
+// DASHBOARD
+function loadDashboard(){
+  const hr=new Date().getHours();
+  const greet=hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
+  const el=document.getElementById('dash-greet');
+  if(el)el.textContent=greet+', Yasir 👋';
+  animCount('d-trust',847);
+  animCount('d-conn',312);
+  animCount('d-revs',28);
+  animCount('d-times',14);
+  animCount('trust-big',847);
+  buildChart();
+}
+
+function buildChart(){
+  const chart=document.getElementById('mini-chart');
+  const labels=document.getElementById('chart-labels');
+  if(!chart)return;
+  const data=[1,1,1,1,0,1,1,1,1,1,1,1,1,1].map(v=>v===1?Math.floor(Math.random()*40+60):10);
+  const max=Math.max(...data);
+  chart.innerHTML=data.map((v,i)=>`<div class="mb ${v===max?'hi':''}" style="height:${(v/max)*100}%"></div>`).join('');
+  if(labels)labels.innerHTML=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb'].map(m=>`<span style="font-size:9px">${m}</span>`).join('');
+}
+
+function dTab(el){
+  document.querySelectorAll('.dn-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// LIVE COUNTER - updates trust score live
+setInterval(()=>{
+  const el=document.getElementById('hs1');
+  if(el&&el.textContent!=='0'){
+    const v=parseInt(el.textContent.replace('K',''))*1000+Math.floor(Math.random()*3+1);
+    el.textContent=v>=1000?(v/1000).toFixed(0)+'K':v;
+  }
+},5000);
+
+// INIT
+loadDashboard();
+</script>
+</body>
+</html>
